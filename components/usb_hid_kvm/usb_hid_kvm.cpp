@@ -70,7 +70,7 @@ bool UsbHidKvm::wait_ready_(uint32_t timeout_ms) {
     waited += 5;
   }
   if (!tud_hid_ready()) {
-    ESP_LOGW(TAG, "HID endpoint not ready after %ums wait", timeout_ms);
+    ESP_LOGW(TAG, "HID endpoint not ready after %lums wait", (unsigned long) timeout_ms);
     return false;
   }
   return true;
@@ -129,9 +129,17 @@ void UsbHidKvm::send_kvm_switch(int port_num) {
 extern "C" uint8_t const *tud_hid_descriptor_report_cb(uint8_t instance) {
   return hid_report_descriptor;
 }
+
 extern "C" uint16_t tud_hid_get_report_cb(uint8_t instance, uint8_t report_id,
                                            hid_report_type_t report_type, uint8_t *buffer,
                                            uint16_t reqlen) {
   return 0;
 }
-extern "C" void
+
+extern "C" void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id,
+                                       hid_report_type_t report_type, uint8_t const *buffer,
+                                       uint16_t bufsize) {
+}
+
+}  // namespace usb_hid_kvm
+}  // namespace esphome
