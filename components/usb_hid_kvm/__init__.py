@@ -1,6 +1,10 @@
 import esphome.codegen as cg
 import esphome.config_validation as cv
-from esphome.components.esp32 import add_idf_sdkconfig_option, only_on_variant
+from esphome.components.esp32 import (
+    add_idf_component,
+    add_idf_sdkconfig_option,
+    only_on_variant,
+)
 from esphome.const import CONF_ID
 
 usb_hid_kvm_ns = cg.esphome_ns.namespace("usb_hid_kvm")
@@ -16,4 +20,5 @@ CONFIG_SCHEMA = cv.All(
 async def to_code(config):
     var = cg.new_Pvariable(config[CONF_ID])
     await cg.register_component(var, config)
+    add_idf_component(name="espressif/esp_tinyusb", ref="2.2.1")
     add_idf_sdkconfig_option("CONFIG_TINYUSB_HID_COUNT", 1)
