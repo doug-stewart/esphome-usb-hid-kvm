@@ -10,8 +10,9 @@ class UsbHidKvm : public Component {
   void send_kvm_switch(int port_num);
 
  protected:
-  void send_report_(uint8_t modifier, uint8_t keycode);
-  void release_();
+  bool wait_ready_(uint32_t timeout_ms);
+  bool send_report_(uint8_t modifier, uint8_t keycode);
+  bool release_();
 };
 
 }  // namespace usb_hid_kvm
