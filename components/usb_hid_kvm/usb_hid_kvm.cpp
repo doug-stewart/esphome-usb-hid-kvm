@@ -54,7 +54,13 @@ void UsbHidKvm::setup() {
   tusb_cfg.descriptor.string = string_desc_arr;
   tusb_cfg.descriptor.string_count = sizeof(string_desc_arr) / sizeof(string_desc_arr[0]);
   tusb_cfg.descriptor.full_speed_config = hid_configuration_descriptor;
-  ESP_ERROR_CHECK(tinyusb_driver_install(&tusb_cfg));
+
+  esp_err_t err = tinyusb_driver_install(&tusb_cfg);
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG, "tinyusb_driver_install failed: %s", esp_err_to_name(err));
+    return;
+  }
+  ESP_LOGI(TAG, "TinyUSB HID keyboard stack installed successfully");
 }
 
 void UsbHidKvm::send_report_(uint8_t modifier, uint8_t keycode) {
